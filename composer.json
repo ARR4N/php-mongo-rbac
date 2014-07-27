@@ -1,0 +1,21 @@
+{
+    "name": "oonix/mongo-rbac",
+    "description": "Core MongoDB classes extended to use PhpRbac for fine-grained access control.",
+    "require": {
+        "php": ">=5.4.0",
+        "owasp/phprbac": "2.0.*",
+        "ext-mongo" : ">=1.3.0"
+    },
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Arran Schlosberg",
+            "email": "arran@oonix.com.au"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Oonix\\Mongo\\": "src/"
+        }
+	}
+}

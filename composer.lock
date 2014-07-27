@@ -1,0 +1,73 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "60432235ae7355f00e1405c5504b4c58",
+    "packages": [
+        {
+            "name": "owasp/phprbac",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OWASP/rbac.git",
+                "reference": "1af904f69dcfc61f1a27c90fe8de2bfd574c1a71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OWASP/rbac/zipball/1af904f69dcfc61f1a27c90fe8de2bfd574c1a71",
+                "reference": "1af904f69dcfc61f1a27c90fe8de2bfd574c1a71",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PhpRbac": "PhpRbac/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY-SA-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "AbiusX",
+                    "email": "me@abiusx.com",
+                    "homepage": "http://abiusx.com/",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Jesse Burns",
+                    "email": "jesse.burns@alliancecms.com",
+                    "homepage": "http://www.jbwebware.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP-RBAC is the de-facto authorization library for PHP. It provides developers with NIST Level 2 Standard Role Based Access Control and more, in the fastest implementation yet.",
+            "homepage": "http://phprbac.net/",
+            "keywords": [
+                "owasp",
+                "rbac",
+                "security"
+            ],
+            "time": "2014-03-14 13:39:52"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": [
+
+    ],
+    "platform": {
+        "ext-mongo": ">=1.3.0"
+    },
+    "platform-dev": [
+
+    ]
+}
