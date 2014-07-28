@@ -26,7 +26,7 @@ class MongoClient extends \MongoClient {
 	protected $_rbacDefaultAllow = false;
 	
 	/**
-	 * Extend the standard constructor to require 2 prepended arguments but otherwise operate as the core \MongoClient.
+	 * Extend the standard constructor to require 3 prepended arguments but otherwise operate as the core \MongoClient.
 	 * Uses func_get_args() rather than explicitly stating the arguments to allow for the possibility of additional arguments add in later core versions.
 	 *
 	 * @param $rbac		\PhpRbac\Rbac		an instance of the RBAC object
