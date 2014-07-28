@@ -47,10 +47,18 @@ class MongoCollection {
 	}
 	
 	public function __call($func, $args){
-		if(!in_array($func, $this->_skipRbac)){
-			$this->rbacCheck($func);
+		$toCall = array($this->_collection, $func);
+		if(!is_callable($toCall)){
+			throw new MongoRbacException("MongoCollection::{$func}() does not exist.");
 		}
-		return call_user_func_array(array($this->_collection, $func), $args);
+		if(!in_array($func, $this->_skipRbac)){
+			$this->rbacCheck($func, $args);
+		}
+		return call_user_func_array($toCall, $args);
+	}
+	
+	public function getRbacPath(){
+		return "{$this->getDB()->getName()}/".(str_replace(".", "/", $this->getName()));
 	}
 
 }

@@ -15,7 +15,7 @@ class MongoClient extends \MongoClient {
 	protected $_rbacUserIdCallback;
 	
 	/**
-	 * Function callback to return custom permission paths in place of ::rbacPath() - if this is not callable, or the returned value not a string then the default from ::rbacPath() is used
+	 * Function callback to return custom permission paths in place of ::rbacPath() - if this is not callable, or the returned value not a string or boolean false then the default from ::rbacPath() is used
 	 */
 	protected $_rbacPermPathCallback;
 	
@@ -31,7 +31,7 @@ class MongoClient extends \MongoClient {
 	 *
 	 * @param $rbac		\PhpRbac\Rbac		an instance of the RBAC object
 	 * @param $userId		callable				a function callback to return the current integer user ID; caching does not occur and is the responsiblity of the developer should it be warranted; expects 0 for guest
-	 * @param $permPath	callable				a function callback to return custom permission paths in place of ::rbacPath() - if this is not callable, or the returned value is not a string then the default from ::rbacPath() is used; should take the same arguments as ::rbacPath() as well as an additional callable reference to ::rbacPath()
+	 * @param $permPath	callable				a function callback to return custom permission paths in place of ::rbacPath() - if this is not callable, or the returned value is not a string or boolean false then the default from ::rbacPath() is used; should take the same arguments as ::rbacPath() as well as an additional callable reference to ::rbacPath()
 	 */
 	public function __construct(\PhpRbac\Rbac $rbac, callable $userId, callable $permPath = null){
 		$args = func_get_args();
@@ -92,6 +92,9 @@ class MongoClient extends \MongoClient {
 	 */
 	public function rbacCheck($action, $obj, array $metaData = null){
 		$path = $this->rbacPath($action, $obj, $metaData);
+		if($path===false){ //will only occur if the custom callback returns false - allows everything
+			return;
+		}
 		
 		$allow = false;
 		$pathId = $this->_rbac->Permissions->pathId($path);
@@ -116,14 +119,14 @@ class MongoClient extends \MongoClient {
 	public function rbacPath($action, $obj, array $metaData = null){
 		if(is_callable($this->_rbacPermPathCallback)){
 			$path = call_user_func_array($this->_rbacPermPathCallback, array($action, $obj, $metaData, $this));
-			if(is_string($path)){
+			if(is_string($path) || $path===false){
 				return $path;
 			}
 		}
 		$parts = explode("_", $action, 2);
 		switch($parts[0]){
 			case "collection":
-				$base = "/mongo/{$obj->getDB()->getName()}/".(str_replace(".", "/", $obj->getName()));
+				$base = "/mongo/{$obj->getRbacPath()}";
 				switch($parts[1]){
 					case "insert":
 						return "{$base}/\$insert";
