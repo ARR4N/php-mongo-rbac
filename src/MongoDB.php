@@ -13,7 +13,6 @@ class MongoDB extends \MongoDB {
 		$args = func_get_args();
 		call_user_func_array(array('parent', '__construct'), $args);
 		$this->_rbacData = $args;
-		$this->rbacCheck("construct");
 	}
 	
 	public function rbacCheck($action, array $metaData = null){

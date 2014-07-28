@@ -2,26 +2,55 @@
 
 namespace Oonix\Mongo;
 
-class MongoCollection extends \MongoCollection{
+class MongoCollection {
 	
-	private $_rbacData = array();
+	protected $_collection;
+	
+	protected $_rbacData = array();
 	
 	/**
-	 * Extend the core constructor and act identically except first check for permission.
+	 * An array of methods that don't need to be checked against RBAC.
 	 */
+	protected $_skipRbac = array("getName");
+	
 	public function __construct(){
 		$args = func_get_args();
-		call_user_func_array(array('parent', '__construct'), $args);
+		$r = new \ReflectionClass("\MongoCollection");
+		$this->_collection = $r->newInstanceArgs($args);
 		$this->_rbacData = $args;
-		$this->rbacCheck("construct"); //parent::construct() is called first because it saves the $db property; doing this manually caused an exception to be throwns
 	}
 	
+	/**
+	 * A MongoRbacException will be thrown if the current user is not allowed to perform the action.
+	 */
 	public function rbacCheck($action, array $metaData = null){
-		$this->db->getConn()->rbacCheck("collection_{$action}", $this, $metaData);
+		$this->getDB()->getConn()->rbacCheck("collection_{$action}", $this, $metaData);
 	}
 	
-	public function getName(){
-		return $this->_rbacData[1];
+	public function getDB(){
+		return $this->_rbacData[0];
+	}
+	
+	public function __get($name){
+		return new \Oonix\Mongo\MongoCollection($this->getDB(), "{$this->getName()}.{$name}");
+	}
+	
+	public function skipRbac(array $skip = null){
+		if(is_array($skip)){
+			$this->_skipRbac = $skip;
+		}
+		return $this->_skipRbac;
+	}
+	
+	public function skipRbacMerge(array $skip){
+		return $this->_skipRbac = array_merge($this->_skipRbac, $skip);
+	}
+	
+	public function __call($func, $args){
+		if(!in_array($func, $this->_skipRbac)){
+			$this->rbacCheck($func);
+		}
+		return call_user_func_array(array($this->_collection, $func), $args);
 	}
 
 }
